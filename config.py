@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 GEMINI_API_KEY: str = os.getenv("GEMINI_API_KEY", "")
-GEMINI_MODEL: str = "gemini-2.0-flash"
+GEMINI_MODEL: str = "gemini-2.5-flash"
 
 # Basic staples the agent is allowed to assume the user has
 ALLOWED_STAPLES: list[str] = [
