@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import google.generativeai as genai
 
-from config import GEMINI_API_KEY, GEMINI_MODEL, SYSTEM_PROMPT
+from config import GEMINI_API_KEY, GEMINI_MODEL, SYSTEM_PROMPT, RECIPE_SEPARATOR
 
 
 def _configure_client() -> None:
@@ -40,16 +40,26 @@ def build_user_prompt(
     if cuisine:
         parts.append(f"Preferred cuisine: {cuisine}.")
 
-    parts.append("Please give me a recipe I can make right now.")
+    parts.append("Please give me 3 different recipe options I can make right now.")
     return " ".join(parts)
 
 
-def generate_recipe(
+def _parse_recipes(raw_text: str) -> list[str]:
+    """Split the raw model output into individual recipe strings.
+
+    Falls back to returning the full text as a single recipe if the
+    separator is not found.
+    """
+    recipes = [r.strip() for r in raw_text.split(RECIPE_SEPARATOR) if r.strip()]
+    return recipes
+
+
+def generate_recipes(
     ingredients: list[str],
     max_time: str | None = None,
     cuisine: str | None = None,
-) -> str:
-    """Call Gemini and return the generated recipe as Markdown.
+) -> list[str]:
+    """Call Gemini and return a list of generated recipes as Markdown strings.
 
     Args:
         ingredients: List of ingredient strings.
@@ -57,7 +67,7 @@ def generate_recipe(
         cuisine: Optional cuisine preference.
 
     Returns:
-        Generated recipe text in Markdown format.
+        List of generated recipe texts in Markdown format.
 
     Raises:
         ValueError: If no ingredients are provided or API key is missing.
@@ -85,10 +95,10 @@ def generate_recipe(
         response = model.generate_content(
             user_prompt,
             generation_config=genai.types.GenerationConfig(
-                temperature=0.7,
-                max_output_tokens=2048,
+                temperature=0.9,
+                max_output_tokens=4096,
             ),
         )
-        return response.text
+        return _parse_recipes(response.text)
     except Exception as exc:
         raise RuntimeError(f"Recipe generation failed: {exc}") from exc
