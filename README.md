@@ -1,10 +1,14 @@
 # 🍳 Pantry Recipe Generator
 
-An AI-powered agent that eliminates mealtime decision fatigue and reduces food waste by generating tailored, step-by-step recipes based strictly on the ingredients you currently have in your kitchen.
+🔗 **Live App:** [nicklausdachef.streamlit.app](https://nicklausdachef.streamlit.app/)
+
+An AI-powered recipe generator that eliminates mealtime decision fatigue and reduces food waste. Tell it what's in your pantry, and it generates **3 unique recipe options** displayed side by side — each using only the ingredients you actually have. Pick the one that sounds best and start cooking.
 
 ## Features
 
-- **Ingredient Input** — List what you have, get a recipe back
+- **Multi-Recipe Generation** — Get 3 distinct recipes at once, displayed side by side for easy comparison
+- **Ingredient-Flexible** — Each recipe uses a smart subset of your ingredients; no need to use everything
+- **Configurable Servings** — Scale recipes from 1 to 12 servings
 - **Time Constraints** — Filter by available cooking time (15 / 30 / 45 / 60 mins)
 - **Cuisine Preference** — Choose from 10+ cuisine styles or leave it open
 - **Strict Adherence** — The agent never hallucinates ingredients you didn't provide (basic staples like salt, pepper, and oil are assumed)
@@ -14,7 +18,7 @@ An AI-powered agent that eliminates mealtime decision fatigue and reduces food w
 
 | Layer | Technology |
 |-------|-----------|
-| LLM | Google Gemini 2.0 Flash |
+| LLM | Google Gemini 2.5 Flash |
 | Backend | Python + `google-generativeai` SDK |
 | Frontend | Streamlit |
 | Config | python-dotenv |
@@ -74,7 +78,8 @@ recipe-generator/
 
 ## How It Works
 
-1. The user enters ingredients and optional constraints in the Streamlit UI.
-2. `engine.py` constructs a user prompt and sends it to **Gemini 2.0 Flash** with a strict system prompt defined in `config.py`.
+1. The user enters ingredients, cooking time, cuisine preference, and serving size in the Streamlit UI.
+2. `engine.py` constructs a user prompt and sends it to **Gemini 2.5 Flash** with a strict system prompt defined in `config.py`.
 3. The system prompt enforces ingredient adherence — the model may only use listed ingredients plus basic staples (salt, pepper, oil, water).
-4. The formatted Markdown recipe is streamed back and rendered in the browser.
+4. The model returns 3 distinct recipes, each using a different subset of the provided ingredients.
+5. Recipes are displayed side by side in the browser so the user can compare and pick their favourite.
