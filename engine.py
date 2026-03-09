@@ -18,6 +18,7 @@ def build_user_prompt(
     ingredients: list[str],
     max_time: str | None = None,
     cuisine: str | None = None,
+    servings: int = 2,
 ) -> str:
     """Compose the user-facing prompt sent to the model.
 
@@ -25,6 +26,7 @@ def build_user_prompt(
         ingredients: List of ingredient strings the user has available.
         max_time: Optional time constraint, e.g. "under 30 mins".
         cuisine: Optional cuisine preference, e.g. "Italian".
+        servings: Number of servings to scale the recipe to.
 
     Returns:
         A formatted prompt string.
@@ -40,6 +42,7 @@ def build_user_prompt(
     if cuisine:
         parts.append(f"Preferred cuisine: {cuisine}.")
 
+    parts.append(f"Servings: {servings}.")
     parts.append("Please give me 3 different recipe options I can make right now.")
     return " ".join(parts)
 
@@ -58,6 +61,7 @@ def generate_recipes(
     ingredients: list[str],
     max_time: str | None = None,
     cuisine: str | None = None,
+    servings: int = 2,
 ) -> list[str]:
     """Call Gemini and return a list of generated recipes as Markdown strings.
 
@@ -65,6 +69,7 @@ def generate_recipes(
         ingredients: List of ingredient strings.
         max_time: Optional time constraint.
         cuisine: Optional cuisine preference.
+        servings: Number of servings to scale the recipe to.
 
     Returns:
         List of generated recipe texts in Markdown format.
@@ -89,7 +94,7 @@ def generate_recipes(
         system_instruction=SYSTEM_PROMPT,
     )
 
-    user_prompt = build_user_prompt(ingredients, max_time, cuisine)
+    user_prompt = build_user_prompt(ingredients, max_time, cuisine, servings)
 
     try:
         response = model.generate_content(
