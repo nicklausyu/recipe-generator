@@ -38,7 +38,7 @@ makes sense for each dish. You may also assume the user has these basic staples:
 3. If the provided ingredients are insufficient for 3 reasonable recipes, generate \
 as many as you can and explain why more aren't possible.
 4. Respect any constraints the user specifies (cooking time, cuisine preference, etc.).
-5. Provide estimated measurements based on standard 2-serving portions.
+5. Scale all ingredient measurements to match the number of servings the user requests.
 
 ## Output Format (Markdown)
 Return exactly 3 recipes separated by the exact line: `{separator}`
@@ -50,7 +50,7 @@ Each recipe must follow this structure:
 **Prep Time:** <X mins>  
 **Cook Time:** <Y mins>  
 **Total Time:** <X + Y mins>  
-**Servings:** 2
+**Servings:** <number of servings as requested by the user>
 
 ## Ingredients
 - <amount> <ingredient>

@@ -29,7 +29,7 @@ ingredients_text = st.text_area(
 )
 
 # ── Constraint toggles ──────────────────────────────────────────────────────
-col1, col2 = st.columns(2)
+col1, col2, col3 = st.columns(3)
 
 with col1:
     time_options = [
@@ -57,6 +57,15 @@ with col2:
     ]
     selected_cuisine = st.selectbox("🌍 Preferred cuisine", cuisine_options)
 
+with col3:
+    servings = st.number_input(
+        "🍽️ Number of servings",
+        min_value=1,
+        max_value=12,
+        value=2,
+        step=1,
+    )
+
 # ── Generate button ──────────────────────────────────────────────────────────
 generate = st.button("🍽️ Generate Recipes", type="primary", use_container_width=True)
 
@@ -78,6 +87,7 @@ if generate:
                     ingredients=ingredients,
                     max_time=max_time,
                     cuisine=cuisine,
+                    servings=servings,
                 )
                 st.session_state["recipes"] = recipes
                 st.session_state["selected_recipe"] = None
